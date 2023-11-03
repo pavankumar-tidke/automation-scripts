@@ -1,0 +1,26 @@
+---
+
+  - name: This script will deploy nodejs app on node servers
+    hosts: all
+    become: true
+    gather_facts: true
+
+
+    tasks:
+
+    - name: Install firewall package
+      package:
+        name: firewalld
+        state: present
+
+    - name: Ensure firewall service is running
+      service:
+        name: firewalld
+        state: started
+
+    - name: Open firewall port
+      firewalld:
+        service: custom
+        port: 3000/tcp
+        permanent: true
+        state: enabled

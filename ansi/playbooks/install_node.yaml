@@ -1,0 +1,26 @@
+---
+
+  - name: Install nodeJs
+    hosts: all
+    become: true
+    gather_facts: true
+
+
+    tasks: 
+
+      - name: Add Node.js repository
+        shell: |
+          sudo curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+
+      - name: Install Node.js
+        apt:
+          name: nodejs
+          state: present
+
+      - name: Verify Node.js installation
+        shell: node -v
+        register: node_version
+
+      - name: Display Node.js version
+        debug:
+          var: node_version.stdout_lines

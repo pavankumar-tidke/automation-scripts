@@ -1,0 +1,15 @@
+---
+  - name: Install Nginx and configure proxy pass
+    hosts: all
+    become: true
+
+    tasks:
+
+      - name: Run a command on node server
+        shell: |
+          curl localhost:3000
+        register: result
+
+      - name: Display the output from the node server
+        debug:
+          var: result.stdout_lines

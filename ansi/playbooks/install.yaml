@@ -1,0 +1,31 @@
+---
+
+  - name: This script will deploy nodejs app on node servers
+    hosts: all
+    become: true
+    gather_facts: true
+
+
+    tasks: 
+
+      - name: Cloning the git repo 
+        git: 
+          repo: https://github.com/userpavankumar/ansible_node_deploy_test.git
+          dest: /root/ansible_node_deploy_test
+
+      - name: Installing pm2 
+        npm:  
+          name: pm2 
+          global: yes 
+          path: /root/ansible_node_deploy_test
+
+      - name: Starting the nodejs app with pm2
+        shell: |
+          cd /root/ansible_node_deploy_test
+          pm2 restart app.js
+
+      - name: Restarting the nginx server
+        service:
+          name: nginx
+          state: restarted
+

@@ -1,0 +1,40 @@
+---
+  - name: Install Nginx and configure proxy pass
+    hosts: all
+    become: true
+
+    tasks:
+     
+      - name: Install nginx
+        apt:
+          name: nginx
+          state: present 
+
+      - name: Remove previous code from default nginx configuration
+        lineinfile:
+          path: /etc/nginx/sites-available/default
+          state: absent
+          regexp: '.*' 
+
+      - name: Add proxy pass configuration to default nginx configuration
+        lineinfile:
+          path: /etc/nginx/sites-available/default
+          line: |
+            server {
+              listen 80 default_server;
+              listen [::]:80 default_server;
+              server_name _;
+              location / {
+                  try_files $uri $uri/ =404;
+                  proxy_pass http://127.0.0.1:3000;
+                  proxy_http_version 1.1;
+                  proxy_set_header Upgrade $http_upgrade;
+              }
+            } 
+
+      - name: restart nginx
+        service:
+          name: nginx
+          state: restarted 
+
+

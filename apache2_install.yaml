@@ -1,0 +1,11 @@
+---
+
+  - name: This script will install  the Apache2
+    hosts: servers
+
+    tasks:
+
+      - name: starting this apache2 Installation...
+        apt:
+          name: apache2
+          state: latest

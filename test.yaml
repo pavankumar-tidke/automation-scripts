@@ -1,0 +1,17 @@
+---
+
+- name: Playbook
+  hosts: all
+  becomes: true
+
+  tasks:
+
+    - name: Installation started...
+      apt:
+        name: apache2
+        status: latest
+
+
+    - name: Service started...
+      Service: nginx
+      start: started

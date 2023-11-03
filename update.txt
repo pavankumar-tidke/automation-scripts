@@ -1,0 +1,51 @@
+#! /usr/bin/bash
+ 
+
+echo "~~~~~ PACKAGE UPDATER ~~~~~"
+echo -ne '\n'
+
+sudo -p "Enter %u's password to continue: " echo "Checking for updates. Please wait..."
+if [ "$?" -ne 0 ] ; then
+	echo -ne "\n"
+	read -p "Unable to verify identity. Please run upd again."
+	if screen -list | grep -q "Attached" ; then
+		exit
+	else
+		clear
+		exit
+	fi
+fi
+
+sudo apt-get update > /dev/null
+echo
+echo "---AVAILABLE UPDATES---"
+echo
+sudo apt-get -u upgrade --assume-no
+updater() {
+	echo
+	echo Ready to update?
+	read -p '> ' answer
+	case ${answer,,} in
+		yes|y|ok|okay|alright*|sure|yup*|yep*|yea*|uh*huh|engage)
+			echo
+			echo "---UPDATING PACKAGES---"
+			echo
+			sudo apt-get upgrade -y
+			echo
+			read -p "All done! (Press return to exit.)"
+			return 0
+			;;
+		no|n|nope|nah|nyet|uh*uh|nuh*uh|not*)
+			echo
+			read -p "Okey dokey! (Press return to exit.)"
+			return 0
+			;;
+		*)
+			echo
+			echo "It's a yes-or-no question."
+			return 1
+			;;
+	esac
+}
+until updater; do : ; done
+echo
